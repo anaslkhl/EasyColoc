@@ -1,22 +1,7 @@
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Colocations — CoHaven</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
-  <style>
-    body { font-family: 'DM Sans', sans-serif; }
-    .font-serif { font-family: 'DM Serif Display', serif; }
-    .member-row { transition: background 0.15s ease; }
-    .member-row:hover { background: rgba(198,159,137,0.07); }
-    .modal-backdrop { animation: fadeIn 0.2s ease; }
-    .modal-box { animation: slideUp 0.25s ease; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-  </style>
-</head>
+@extends('layouts.app')
+
+@section('content')
+
 <body class="min-h-screen flex flex-col" style="background: #F5F0EB;">
 
   <div id="header-placeholder"></div>
@@ -30,7 +15,9 @@
         <p class="text-stone-500 mt-1 text-sm">Manage members, roles, and expenses per colocation.</p>
       </div>
       <button onclick="openAddMemberModal()" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium text-white shadow-sm hover:shadow-md active:scale-95 transition-all" style="background: #DD2D4A;">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
         Add Member
       </button>
     </div>
@@ -271,11 +258,11 @@
       <div class="space-y-4">
         <div>
           <label class="block text-sm font-medium text-stone-700 mb-1.5">Full Name</label>
-          <input type="text" placeholder="e.g. Thomas Martin" class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm text-stone-700 focus:outline-none focus:ring-2 focus:border-transparent transition-all" style="--tw-ring-color: #C69F89; focus:ring-color: #C69F89;" onfocus="this.style.borderColor='#C69F89'" onblur="this.style.borderColor='#e7e5e4'"/>
+          <input type="text" placeholder="e.g. Thomas Martin" class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm text-stone-700 focus:outline-none focus:ring-2 focus:border-transparent transition-all" style="--tw-ring-color: #C69F89; focus:ring-color: #C69F89;" onfocus="this.style.borderColor='#C69F89'" onblur="this.style.borderColor='#e7e5e4'" />
         </div>
         <div>
           <label class="block text-sm font-medium text-stone-700 mb-1.5">Email Address</label>
-          <input type="email" placeholder="thomas@example.com" class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm text-stone-700 focus:outline-none transition-all" onfocus="this.style.borderColor='#C69F89'" onblur="this.style.borderColor='#e7e5e4'"/>
+          <input type="email" placeholder="thomas@example.com" class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm text-stone-700 focus:outline-none transition-all" onfocus="this.style.borderColor='#C69F89'" onblur="this.style.borderColor='#e7e5e4'" />
         </div>
         <div>
           <label class="block text-sm font-medium text-stone-700 mb-1.5">Role</label>
@@ -306,7 +293,9 @@
     <div class="modal-backdrop absolute inset-0 bg-black/50" onclick="closeRemoveModal()"></div>
     <div class="modal-box relative bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 text-center">
       <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style="background: rgba(221,45,74,0.1);">
-        <svg class="w-7 h-7" style="color: #DD2D4A;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        <svg class="w-7 h-7" style="color: #DD2D4A;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
       </div>
       <h3 class="font-serif text-xl text-stone-800 mb-2">Remove Member?</h3>
       <p class="text-sm text-stone-500 mb-6" id="removeName">This action cannot be undone.</p>
@@ -319,28 +308,41 @@
 
   <script>
     async function loadComponent(id, file) {
-      try { const r = await fetch(file); if(r.ok) document.getElementById(id).innerHTML = await r.text(); } catch(e) {}
+      try {
+        const r = await fetch(file);
+        if (r.ok) document.getElementById(id).innerHTML = await r.text();
+      } catch (e) {}
     }
     loadComponent('header-placeholder', 'header.html');
     loadComponent('footer-placeholder', 'footer.html');
 
-    function openAddMemberModal() { document.getElementById('addMemberModal').classList.remove('hidden'); }
-    function closeAddMemberModal() { document.getElementById('addMemberModal').classList.add('hidden'); }
+    function openAddMemberModal() {
+      document.getElementById('addMemberModal').classList.remove('hidden');
+    }
+
+    function closeAddMemberModal() {
+      document.getElementById('addMemberModal').classList.add('hidden');
+    }
+
     function confirmRemove(name) {
       document.getElementById('removeName').textContent = `Remove ${name} from this colocation?`;
       document.getElementById('removeModal').classList.remove('hidden');
     }
-    function closeRemoveModal() { document.getElementById('removeModal').classList.add('hidden'); }
+
+    function closeRemoveModal() {
+      document.getElementById('removeModal').classList.add('hidden');
+    }
 
     // Tab switching
     document.querySelectorAll('.coloc-tab').forEach(tab => {
       tab.addEventListener('click', function() {
         document.querySelectorAll('.coloc-tab').forEach(t => {
-          t.style.background = '#E5DDD4'; t.style.color = '#57534e';
+          t.style.background = '#E5DDD4';
+          t.style.color = '#57534e';
         });
-        this.style.background = '#563F1B'; this.style.color = 'white';
+        this.style.background = '#563F1B';
+        this.style.color = 'white';
       });
     });
   </script>
-</body>
-</html>
+  @endsection

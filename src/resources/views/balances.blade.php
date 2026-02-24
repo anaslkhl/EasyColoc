@@ -1,66 +1,5 @@
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
-
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Balances — CoHaven</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
-    <style>
-        body {
-            font-family: 'DM Sans', sans-serif;
-        }
-
-        .font-serif {
-            font-family: 'DM Serif Display', serif;
-        }
-
-        .settle-row {
-            transition: background 0.12s;
-        }
-
-        .settle-row:hover {
-            background: rgba(198, 159, 137, 0.07);
-        }
-
-        .modal-backdrop {
-            animation: fadeIn 0.2s ease;
-        }
-
-        .modal-box {
-            animation: slideUp 0.25s ease;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .balance-bar {
-            height: 6px;
-            border-radius: 99px;
-            transition: width 0.6s ease;
-        }
-    </style>
-</head>
+@extends('layouts.app')
+@section('content')
 
 <body class="min-h-screen flex flex-col" style="background: #F5F0EB;">
 
@@ -287,6 +226,70 @@
         ✓ Settlement marked as paid!
     </div>
 
+
+
+
+
+
+
+
+
+    <style>
+        body {
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .font-serif {
+            font-family: 'DM Serif Display', serif;
+        }
+
+        .settle-row {
+            transition: background 0.12s;
+        }
+
+        .settle-row:hover {
+            background: rgba(198, 159, 137, 0.07);
+        }
+
+        .modal-backdrop {
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal-box {
+            animation: slideUp 0.25s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .balance-bar {
+            height: 6px;
+            border-radius: 99px;
+            transition: width 0.6s ease;
+        }
+    </style>
+
+
+
     <script>
         async function loadComponent(id, file) {
             try {
@@ -311,5 +314,4 @@
         }
     </script>
 </body>
-
-</html>
+@endsection

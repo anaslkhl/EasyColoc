@@ -1,13 +1,5 @@
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin Dashboard — CoHaven</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
+@extends('layouts.app')
+@section('content')
 <body class="min-h-screen flex flex-col" style="background: #F5F0EB;">
 
   <div id="header-placeholder"></div>
@@ -354,4 +346,4 @@
     });
   </script>
 </body>
-</html>
+@endsection
