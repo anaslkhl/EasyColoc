@@ -14,12 +14,14 @@
         <h1 class="font-serif text-3xl text-stone-800">Colocations</h1>
         <p class="text-stone-500 mt-1 text-sm">Manage members, roles, and expenses per colocation.</p>
       </div>
-      <button onclick="openAddMemberModal()" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium text-white shadow-sm hover:shadow-md active:scale-95 transition-all" style="background: #DD2D4A;">
+      <a href="{{ route('colocations.create') }}"
+        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium text-white shadow-sm hover:shadow-md active:scale-95 transition-all"
+        style="background: #DD2D4A;">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
         </svg>
-        Add Member
-      </button>
+        Add Colocation
+      </a>
     </div>
 
     <!-- Colocation Selector -->
@@ -287,6 +289,14 @@
       </div>
     </div>
   </div>
+
+
+  <button onclick="openAddMemberModal()" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium text-white shadow-sm hover:shadow-md active:scale-95 transition-all" style="background: #DD2D4A;">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+    </svg>
+    Add Member
+  </button>
 
   <!-- Remove Confirm Modal -->
   <div id="removeModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">

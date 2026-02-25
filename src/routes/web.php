@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ColocationController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RouteController;
@@ -24,3 +25,7 @@ Route::post('/create', [LoginController::class, 'register'])->name('register');
 Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('loginForm', [LoginController::class, 'getLogin'])->name('loginForm');
 Route::get('/login', [LoginController::class, 'login'])->name('login');
+
+Route::get('/colocation/index', [ColocationController::class, 'index'])->name('colocations.index');
+Route::get('/colocation/create', [ColocationController::class, 'create'])->name('colocations.create');
+Route::post('/colocation/save', [ColocationController::class, 'save'])->name('colocations.save');

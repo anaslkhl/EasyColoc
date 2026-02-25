@@ -24,6 +24,24 @@ class User extends Authenticatable
         'role'
     ];
 
+    public function memberships()
+    {
+        return $this->hasMany(Memberships::class);
+    }
+
+    public function colocations()
+    {
+        return $this->belongsToMany(Colocation::class, 'memberships')
+            ->withPivot('role', 'joined_at', 'left_at')
+            ->withTimestamps();
+    }
+
+
+    public function ownedColocation()
+    {
+        return $this->hasMany(Colocation::class, 'owner_id');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *
