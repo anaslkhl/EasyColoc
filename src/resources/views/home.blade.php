@@ -2,7 +2,9 @@
 
 @section('content')
 <main
-    class="relative flex flex-col items-center justify-center min-h-screen>
+    class="flex-col items-center justify-center min-h-screen bg-cover bg-center bg-no-repeat"
+    style="background-image: url('{{ asset('images/pexels-felix-mittermeier-957085.jpg') }}');">
+    >
     <div class="absolute inset-0 bg-black/40"></div>
 
     <!-- Content -->

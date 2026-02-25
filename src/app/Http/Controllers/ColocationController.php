@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Colocation;
+use App\Models\User;
 use Illuminate\Container\Attributes\Auth as AttributesAuth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,8 +16,20 @@ class ColocationController extends Controller
 
     public function index()
     {
-        $colocations = Colocation::all();
-        return view('colocations', compact('colocations'));
+        $userId = Auth::id();
+
+        $colocation = Colocation::with([
+            'users',
+            'activeMembers',
+            'categories'
+        ])->where('owner_id', $userId)->first();
+
+        $isOwner = (bool) $colocation;
+
+        return view('colocations', compact(
+            'colocation',
+            'isOwner'
+        ));
     }
 
     public function create()

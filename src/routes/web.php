@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ColocationController;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RouteController;
 use App\Http\Controllers\UserController;
@@ -14,11 +16,11 @@ Route::get('/', function () {
 
 
 
-Route::get('/home', [RouteController::class, 'home']);
+Route::get('/home', [RouteController::class, 'home'])->name('home');
 Route::get('/admin', [RouteController::class, 'admin']);
 Route::get('/dashboard', [RouteController::class, 'dashboard']);
 Route::get('/expences', [RouteController::class, 'expences']);
-Route::get('/colocations', [RouteController::class, 'colocations']);
+Route::get('/colocations', [ColocationController::class, 'index'])->name('colocation.index');
 Route::get('/balances', [RouteController::class, 'balances']);
 Route::get('registerForm', [LoginController::class, 'showRegisterForm'])->name('showRegisterForm');
 Route::post('/create', [LoginController::class, 'register'])->name('register');
@@ -29,3 +31,18 @@ Route::get('/login', [LoginController::class, 'login'])->name('login');
 Route::get('/colocation/index', [ColocationController::class, 'index'])->name('colocations.index');
 Route::get('/colocation/create', [ColocationController::class, 'create'])->name('colocations.create');
 Route::post('/colocation/save', [ColocationController::class, 'save'])->name('colocations.save');
+// Route::post('/colocation/store', [ColocationController::class, 'store'])->name('colocations.store');
+Route::get('/colocation/show', [ColocationController::class, 'show'])->name('colocations.show');
+Route::get('cancel/{colocation}', [ColocationController::class, 'cancel'])->name('cancel');
+Route::get('/create/category', [CategoryController::class, 'create'])->name('create.category');
+Route::post('/categories/store{colocation}', [CategoryController::class, 'store'])->name('categories.store');
+Route::post('/create/exponse', [CategoryController::class, 'create'])->name('create.exponse');
+
+Route::get('/invite/send', [InvitationController::class, 'send'])->name('invite.send');
+Route::get('/invite/invitation{colocation}', [InvitationController::class, 'invite'])->name('invite.invitation');
+
+
+Route::post('/colocation/{colocation}/invite', [InvitationController::class, 'send'])->name('invite.send');
+
+Route::get('/invitations/accept/{colocation}', [InvitationController::class, 'accept']);
+Route::get('/invitations/decline/{colocation}', [InvitationController::class, 'decline']);

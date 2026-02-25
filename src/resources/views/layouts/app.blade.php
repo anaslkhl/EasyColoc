@@ -11,10 +11,7 @@
 <body class="bg-gray-50">
     @include('partials.header')
 
-    <main
-        class="flex-col items-center justify-center min-h-screen bg-cover bg-center bg-no-repeat"
-        style="background-image: url('{{ asset('images/pexels-felix-mittermeier-957085.jpg') }}');">
-        >
+    <main>
         @yield('content')
     </main>
 

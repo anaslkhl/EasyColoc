@@ -27,6 +27,12 @@ class Colocation extends Model
         return $this->hasMany(Membership::class);
     }
 
+    public function activeMembers()
+    {
+        return $this->belongsToMany(User::class, 'memberships')
+            ->wherePivot('status', 'active');
+    }
+
     public function users()
     {
         return $this->belongsToMany(User::class, 'memberships')

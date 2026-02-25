@@ -1,358 +1,194 @@
 @extends('layouts.app')
-
 @section('content')
 
-<body class="min-h-screen flex flex-col" style="background: #F5F0EB;">
+<main class="bg-gray-900 text-gray-200 min-h-screen py-10">
+  <div class="container mx-auto px-4">
 
-  <div id="header-placeholder"></div>
+    {{-- Breadcrumb --}}
+    <nav class="flex items-center gap-2 text-sm text-gray-400 mb-6">
+      <a href="{{ route('home') }}" class="hover:text-indigo-400 transition">Mes colocations</a>
+      <span>/</span>
+      <span class="text-gray-500">{{ $colocation->name }}</span>
+    </nav>
 
-  <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
-
-    <!-- Title + Filter Row -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+    {{-- Page header --}}
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 bg-gray-800 rounded-2xl p-6 shadow-md">
       <div>
-        <h1 class="font-serif text-3xl text-stone-800">Colocations</h1>
-        <p class="text-stone-500 mt-1 text-sm">Manage members, roles, and expenses per colocation.</p>
+        <h1 class="text-3xl font-extrabold">{{ $colocation->name }}</h1>
+        <p class="text-gray-400 mt-1">
+          Propriétaire : <strong class="text-gray-200">{{ $colocation->owner->name }}</strong>
+          · <span class="text-teal-400 font-semibold">{{ $colocation->activeMembers->count() }} membres</span>
+        </p>
       </div>
-      <a href="{{ route('colocations.create') }}"
-        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium text-white shadow-sm hover:shadow-md active:scale-95 transition-all"
-        style="background: #DD2D4A;">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-        </svg>
-        Add Colocation
-      </a>
+      <div class="flex flex-wrap gap-2">
+        @if($isOwner)
+        <a href="{{ route('invite.invitation', $colocation) }}" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-sm font-semibold transition">
+          Inviter un membre
+        </a>
+        <form method="POST" action="{{ route('cancel', $colocation) }}" onsubmit="return confirm('Annuler définitivement cette colocation ?')">
+          @csrf
+          <button type="submit" class="px-4 py-2 bg-red-700 hover:bg-red-600 rounded-lg text-sm font-semibold transition">
+            Annuler la colocation
+          </button>
+        </form>
+        @else
+        <form method="POST" action="{{ route('leave', $colocation) }}" onsubmit="return confirm('Quitter cette colocation ?')">
+          @csrf
+          <button type="submit" class="px-4 py-2 bg-red-700 hover:bg-red-600 rounded-lg text-sm font-semibold transition">
+            Quitter la colocation
+          </button>
+        </form>
+        @endif
+      </div>
     </div>
 
-    <!-- Colocation Selector -->
-    <div class="flex flex-wrap gap-3 mb-8">
-      <button class="coloc-tab px-5 py-2 rounded-full text-sm font-medium text-white transition-all" style="background: #563F1B;" data-coloc="0">Rue de la Paix</button>
-      <button class="coloc-tab px-5 py-2 rounded-full text-sm font-medium text-stone-600 transition-all hover:bg-stone-200" style="background: #E5DDD4;" data-coloc="1">Les Lilas Coloc</button>
-      <button class="coloc-tab px-5 py-2 rounded-full text-sm font-medium text-stone-600 transition-all hover:bg-stone-200" style="background: #E5DDD4;" data-coloc="2">Montmartre House</button>
-      <button class="coloc-tab px-5 py-2 rounded-full text-sm font-medium text-stone-600 transition-all hover:bg-stone-200" style="background: #E5DDD4;" data-coloc="3">Bastille Loft</button>
-    </div>
+    {{-- Main layout --}}
+    <div class="flex flex-col lg:flex-row gap-6">
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-      <!-- Members Table -->
-      <div class="lg:col-span-2 rounded-2xl shadow-sm border border-stone-200 overflow-hidden" style="background: white;">
-        <div class="px-6 py-5 border-b border-stone-100 flex items-center justify-between">
-          <div>
-            <h2 class="font-serif text-xl text-stone-800">Members</h2>
-            <p class="text-stone-400 text-sm mt-0.5">Rue de la Paix · 5 members</p>
+      {{-- LEFT: Members --}}
+      @if($isOwner)
+      <aside class="w-full lg:w-72">
+        <div class="bg-gray-800 rounded-2xl shadow-md overflow-hidden">
+          <div class="px-5 py-4 flex items-center justify-between border-b border-gray-700">
+            <h3 class="uppercase tracking-widest font-semibold text-gray-300 text-sm">Membres</h3>
+            <span class="bg-indigo-900/50 text-indigo-300 px-2 py-0.5 rounded-full text-xs font-semibold">{{ $colocation->activeMembers->count() }}</span>
           </div>
-          <select id="monthFilter" class="text-sm border border-stone-200 rounded-lg px-3 py-1.5 text-stone-600 focus:outline-none">
-            <option>October 2025</option>
-            <option>September 2025</option>
-            <option>August 2025</option>
-          </select>
+          <ul class="divide-y divide-gray-700">
+            @foreach($colocation->activeMembers as $member)
+            <li class="flex items-center justify-between px-5 py-3 hover:bg-gray-700 transition">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-xs font-bold">
+                  {{ strtoupper(substr($member->name, 0, 2)) }}
+                </div>
+                <div>
+                  <p class="text-sm font-medium">{{ $member->name }}
+                    @if($member->id === auth()->id())
+                    <em class="text-gray-400 text-xs">(vous)</em>
+                    @endif
+                  </p>
+                  <p class="text-xs text-gray-400">{{ $member->id === $colocation->owner_id ? 'Owner' : 'Membre' }}</p>
+                </div>
+              </div>
+              @if($isOwner && $member->id !== $colocation->owner_id)
+              <form method="POST" action="" onsubmit="return confirm('Retirer ce membre ?')">
+                @csrf
+                <button type="submit" class="text-red-400 hover:text-red-500 transition text-sm font-semibold">Retirer</button>
+              </form>
+              @endif
+            </li>
+            @endforeach
+          </ul>
         </div>
-        <div class="overflow-x-auto">
-          <table class="w-full">
-            <thead>
-              <tr style="background: #FAFAF9;">
-                <th class="text-left px-6 py-3 text-xs font-semibold text-stone-400 uppercase tracking-wider">Member</th>
-                <th class="text-left px-6 py-3 text-xs font-semibold text-stone-400 uppercase tracking-wider">Role</th>
-                <th class="text-left px-6 py-3 text-xs font-semibold text-stone-400 uppercase tracking-wider">Reputation</th>
-                <th class="text-left px-6 py-3 text-xs font-semibold text-stone-400 uppercase tracking-wider">Balance</th>
-                <th class="px-6 py-3"></th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-stone-50">
-              <tr class="member-row">
-                <td class="px-6 py-4">
-                  <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold" style="background:#E1BB80; color:#563F1B;">AL</div>
-                    <div>
-                      <p class="text-sm font-medium text-stone-800">Alice Laurent</p>
-                      <p class="text-xs text-stone-400">alice@cohaven.io</p>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium" style="background: rgba(86,63,27,0.1); color: #563F1B;">Admin</span></td>
-                <td class="px-6 py-4">
-                  <div class="flex items-center gap-2">
-                    <span class="text-sm font-semibold text-stone-700">+12</span>
-                    <div class="flex gap-1">
-                      <button class="rep-btn w-6 h-6 rounded flex items-center justify-center text-xs hover:bg-teal-50 transition-colors" style="color: #44FFD2;" title="+1">▲</button>
-                      <button class="rep-btn w-6 h-6 rounded flex items-center justify-center text-xs hover:bg-red-50 transition-colors" style="color: #DD2D4A;" title="-1">▼</button>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-6 py-4"><span class="text-sm font-semibold" style="color: #0d9488;">+€45.00</span></td>
-                <td class="px-6 py-4"><button onclick="confirmRemove('Alice Laurent')" class="text-xs text-stone-400 hover:text-red-500 transition-colors">Remove</button></td>
-              </tr>
-              <tr class="member-row">
-                <td class="px-6 py-4">
-                  <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold" style="background:#CEABB1; color:#563F1B;">MB</div>
-                    <div>
-                      <p class="text-sm font-medium text-stone-800">Marc Beaumont</p>
-                      <p class="text-xs text-stone-400">marc@cohaven.io</p>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium" style="background: rgba(198,159,137,0.2); color: #8B6B56;">Member</span></td>
-                <td class="px-6 py-4">
-                  <div class="flex items-center gap-2">
-                    <span class="text-sm font-semibold text-stone-700">+8</span>
-                    <div class="flex gap-1">
-                      <button class="rep-btn w-6 h-6 rounded flex items-center justify-center text-xs hover:bg-teal-50 transition-colors" style="color: #44FFD2;">▲</button>
-                      <button class="rep-btn w-6 h-6 rounded flex items-center justify-center text-xs hover:bg-red-50 transition-colors" style="color: #DD2D4A;">▼</button>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-6 py-4"><span class="text-sm font-semibold" style="color: #DD2D4A;">-€120.50</span></td>
-                <td class="px-6 py-4"><button onclick="confirmRemove('Marc Beaumont')" class="text-xs text-stone-400 hover:text-red-500 transition-colors">Remove</button></td>
-              </tr>
-              <tr class="member-row">
-                <td class="px-6 py-4">
-                  <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold" style="background:#C5E0D8; color:#0d9488;">SL</div>
-                    <div>
-                      <p class="text-sm font-medium text-stone-800">Sophie Leclerc</p>
-                      <p class="text-xs text-stone-400">sophie@cohaven.io</p>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium" style="background: rgba(198,159,137,0.2); color: #8B6B56;">Member</span></td>
-                <td class="px-6 py-4">
-                  <div class="flex items-center gap-2">
-                    <span class="text-sm font-semibold text-stone-700">+15</span>
-                    <div class="flex gap-1">
-                      <button class="rep-btn w-6 h-6 rounded flex items-center justify-center text-xs hover:bg-teal-50 transition-colors" style="color: #44FFD2;">▲</button>
-                      <button class="rep-btn w-6 h-6 rounded flex items-center justify-center text-xs hover:bg-red-50 transition-colors" style="color: #DD2D4A;">▼</button>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-6 py-4"><span class="text-sm font-semibold" style="color: #0d9488;">+€75.20</span></td>
-                <td class="px-6 py-4"><button onclick="confirmRemove('Sophie Leclerc')" class="text-xs text-stone-400 hover:text-red-500 transition-colors">Remove</button></td>
-              </tr>
-              <tr class="member-row">
-                <td class="px-6 py-4">
-                  <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold" style="background:#DCE2AA; color:#3d4a0a;">NK</div>
-                    <div>
-                      <p class="text-sm font-medium text-stone-800">Nina Kaufmann</p>
-                      <p class="text-xs text-stone-400">nina@cohaven.io</p>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium" style="background: rgba(198,159,137,0.2); color: #8B6B56;">Member</span></td>
-                <td class="px-6 py-4">
-                  <div class="flex items-center gap-2">
-                    <span class="text-sm font-semibold text-stone-700">+3</span>
-                    <div class="flex gap-1">
-                      <button class="rep-btn w-6 h-6 rounded flex items-center justify-center text-xs hover:bg-teal-50 transition-colors" style="color: #44FFD2;">▲</button>
-                      <button class="rep-btn w-6 h-6 rounded flex items-center justify-center text-xs hover:bg-red-50 transition-colors" style="color: #DD2D4A;">▼</button>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-6 py-4"><span class="text-sm font-semibold" style="color: #DD2D4A;">-€10.00</span></td>
-                <td class="px-6 py-4"><button onclick="confirmRemove('Nina Kaufmann')" class="text-xs text-stone-400 hover:text-red-500 transition-colors">Remove</button></td>
-              </tr>
-              <tr class="member-row">
-                <td class="px-6 py-4">
-                  <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold" style="background:#C0C0C0; color:#374151;">JD</div>
-                    <div>
-                      <p class="text-sm font-medium text-stone-800">Jean Dubois</p>
-                      <p class="text-xs text-stone-400">jean@cohaven.io</p>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium" style="background: rgba(198,159,137,0.2); color: #8B6B56;">Member</span></td>
-                <td class="px-6 py-4">
-                  <div class="flex items-center gap-2">
-                    <span class="text-sm font-semibold" style="color: #DD2D4A;">-2</span>
-                    <div class="flex gap-1">
-                      <button class="rep-btn w-6 h-6 rounded flex items-center justify-center text-xs hover:bg-teal-50 transition-colors" style="color: #44FFD2;">▲</button>
-                      <button class="rep-btn w-6 h-6 rounded flex items-center justify-center text-xs hover:bg-red-50 transition-colors" style="color: #DD2D4A;">▼</button>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-6 py-4"><span class="text-sm font-semibold" style="color: #DD2D4A;">-€210.00</span></td>
-                <td class="px-6 py-4"><button onclick="confirmRemove('Jean Dubois')" class="text-xs text-stone-400 hover:text-red-500 transition-colors">Remove</button></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+      </aside>
+      @endif
 
-      <!-- Side Info -->
-      <div class="space-y-5">
-        <!-- Coloc Info Card -->
-        <div class="rounded-2xl p-6 shadow-sm border border-stone-200" style="background: white;">
-          <h3 class="font-serif text-lg text-stone-800 mb-4">Colocation Info</h3>
-          <div class="space-y-3">
-            <div class="flex justify-between text-sm">
-              <span class="text-stone-500">Address</span>
-              <span class="text-stone-700 font-medium">12 Rue de la Paix, Paris</span>
-            </div>
-            <div class="flex justify-between text-sm">
-              <span class="text-stone-500">Created</span>
-              <span class="text-stone-700 font-medium">Jan 2024</span>
-            </div>
-            <div class="flex justify-between text-sm">
-              <span class="text-stone-500">Total Expenses</span>
-              <span class="text-stone-700 font-medium">€14,280</span>
-            </div>
-            <div class="flex justify-between text-sm">
-              <span class="text-stone-500">This Month</span>
-              <span class="text-stone-700 font-medium">€1,620</span>
-            </div>
+      {{-- RIGHT: Categories + Expenses --}}
+      <div class="flex-1 flex flex-col gap-6">
+
+        {{-- Section header --}}
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-bold">Catégories & Dépenses</h2>
+
+          {{-- Button to show the form --}}
+          @if($isOwner)
+          <button data-toggle="category-form" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-sm font-semibold rounded-lg transition">
+            + Ajouter une catégorie
+          </button>
+          @endif
+
+          {{-- Create Category Form (hidden by default) --}}
+          <div data-section="category-form" class="toggle-section hidden mt-4 bg-gray-800 p-6 rounded-lg shadow-md">
+            <form method="POST" action="{{ route('categories.store', $colocation) }}"> @csrf
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-300 mb-1" for="name">Nom de la catégorie</label>
+                <input type="text" name="name" id="name" required
+                  class="w-full px-3 py-2 rounded-lg bg-gray-700 text-gray-200 focus:ring-indigo-500 focus:border-indigo-500 border border-gray-600">
+              </div>
+              <div class="flex justify-end gap-2">
+                <button type="button" class="close-section px-4 py-2 bg-gray-600 hover:bg-gray-500 text-sm font-semibold rounded-lg transition">
+                  Annuler
+                </button>
+                <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-sm font-semibold rounded-lg transition">
+                  Créer
+                </button>
+              </div>
+            </form>
           </div>
-        </div>
 
-        <!-- Expense Summary -->
-        <div class="rounded-2xl p-6 shadow-sm border border-stone-200" style="background: white;">
-          <h3 class="font-serif text-lg text-stone-800 mb-4">October Breakdown</h3>
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2 text-sm text-stone-600">
-                <div class="w-2 h-2 rounded-full" style="background: #C69F89;"></div>Rent
+
+
+          @forelse($colocation->categories as $category)
+          <div class="bg-gray-800 rounded-2xl shadow-md overflow-hidden">
+
+            {{-- Category Header --}}
+            <div class="px-5 py-4 flex items-center justify-between border-b border-gray-700">
+              <h3 class="font-bold">{{ $category->name }}</h3>
+              <div class="flex gap-2">
+                <a href="{{ route('create.exponse', $category) }}" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold rounded-lg transition">+ Dépense</a>
+                @if($isOwner)
+                <form method="POST" action="" onsubmit="return confirm('Supprimer cette catégorie et ses dépenses ?')">
+                  @csrf @method('DELETE')
+                  <button type="submit" class="px-3 py-1 text-red-400 hover:text-red-500 text-xs font-semibold transition rounded-lg">Supprimer</button>
+                </form>
+                @endif
               </div>
-              <span class="text-sm font-semibold text-stone-700">€900</span>
             </div>
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2 text-sm text-stone-600">
-                <div class="w-2 h-2 rounded-full" style="background: #DD2D4A;"></div>Electricity
-              </div>
-              <span class="text-sm font-semibold text-stone-700">€85</span>
-            </div>
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2 text-sm text-stone-600">
-                <div class="w-2 h-2 rounded-full" style="background: #44FFD2;"></div>Groceries
-              </div>
-              <span class="text-sm font-semibold text-stone-700">€340</span>
-            </div>
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2 text-sm text-stone-600">
-                <div class="w-2 h-2 rounded-full" style="background: #94778B;"></div>Internet
-              </div>
-              <span class="text-sm font-semibold text-stone-700">€45</span>
-            </div>
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2 text-sm text-stone-600">
-                <div class="w-2 h-2 rounded-full" style="background: #DCE2AA;"></div>Cleaning
-              </div>
-              <span class="text-sm font-semibold text-stone-700">€250</span>
-            </div>
-            <div class="border-t border-stone-100 pt-3 flex justify-between">
-              <span class="text-sm font-semibold text-stone-600">Total</span>
-              <span class="text-sm font-bold text-stone-800">€1,620</span>
-            </div>
+
+
+            {{-- Expenses Table --}}
+           
+
           </div>
+          @empty
+          <div class="bg-gray-800 rounded-2xl p-10 text-center text-gray-400">
+            <p>Aucune catégorie pour l'instant.</p>
+            @if($isOwner)
+            <a href="{{ route('create.category', $colocation) }}" class="text-indigo-400 hover:text-indigo-300 font-semibold mt-2 inline-block">Créer la première catégorie →</a>
+            @endif
+          </div>
+          @endforelse
+
         </div>
+
       </div>
+
     </div>
-  </main>
-
-  <div id="footer-placeholder"></div>
-
-  <!-- Add Member Modal -->
-  <div id="addMemberModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-    <div class="modal-backdrop absolute inset-0 bg-black/50" onclick="closeAddMemberModal()"></div>
-    <div class="modal-box relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="font-serif text-2xl text-stone-800">Add Member</h3>
-        <button onclick="closeAddMemberModal()" class="w-8 h-8 rounded-lg flex items-center justify-center text-stone-400 hover:bg-stone-100 hover:text-stone-700 transition-all">✕</button>
-      </div>
-      <div class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium text-stone-700 mb-1.5">Full Name</label>
-          <input type="text" placeholder="e.g. Thomas Martin" class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm text-stone-700 focus:outline-none focus:ring-2 focus:border-transparent transition-all" style="--tw-ring-color: #C69F89; focus:ring-color: #C69F89;" onfocus="this.style.borderColor='#C69F89'" onblur="this.style.borderColor='#e7e5e4'" />
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-stone-700 mb-1.5">Email Address</label>
-          <input type="email" placeholder="thomas@example.com" class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm text-stone-700 focus:outline-none transition-all" onfocus="this.style.borderColor='#C69F89'" onblur="this.style.borderColor='#e7e5e4'" />
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-stone-700 mb-1.5">Role</label>
-          <select class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm text-stone-700 focus:outline-none transition-all" onfocus="this.style.borderColor='#C69F89'" onblur="this.style.borderColor='#e7e5e4'">
-            <option>Member</option>
-            <option>Admin</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-stone-700 mb-1.5">Colocation</label>
-          <select class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm text-stone-700 focus:outline-none transition-all" onfocus="this.style.borderColor='#C69F89'" onblur="this.style.borderColor='#e7e5e4'">
-            <option>Rue de la Paix</option>
-            <option>Les Lilas Coloc</option>
-            <option>Montmartre House</option>
-            <option>Bastille Loft</option>
-          </select>
-        </div>
-      </div>
-      <div class="flex gap-3 mt-6">
-        <button onclick="closeAddMemberModal()" class="flex-1 px-4 py-2.5 rounded-xl border border-stone-200 text-sm font-medium text-stone-600 hover:bg-stone-50 transition-all">Cancel</button>
-        <button onclick="closeAddMemberModal()" class="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-white transition-all hover:opacity-90 active:scale-95" style="background: #DD2D4A;">Add Member</button>
-      </div>
-    </div>
-  </div>
+</main>
 
 
-  <button onclick="openAddMemberModal()" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium text-white shadow-sm hover:shadow-md active:scale-95 transition-all" style="background: #DD2D4A;">
-    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-    </svg>
-    Add Member
-  </button>
 
-  <!-- Remove Confirm Modal -->
-  <div id="removeModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-    <div class="modal-backdrop absolute inset-0 bg-black/50" onclick="closeRemoveModal()"></div>
-    <div class="modal-box relative bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 text-center">
-      <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style="background: rgba(221,45,74,0.1);">
-        <svg class="w-7 h-7" style="color: #DD2D4A;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-        </svg>
-      </div>
-      <h3 class="font-serif text-xl text-stone-800 mb-2">Remove Member?</h3>
-      <p class="text-sm text-stone-500 mb-6" id="removeName">This action cannot be undone.</p>
-      <div class="flex gap-3">
-        <button onclick="closeRemoveModal()" class="flex-1 px-4 py-2.5 rounded-xl border border-stone-200 text-sm font-medium text-stone-600 hover:bg-stone-50 transition-all">Cancel</button>
-        <button onclick="closeRemoveModal()" class="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-white transition-all" style="background: #DD2D4A;">Remove</button>
-      </div>
-    </div>
-  </div>
 
-  <script>
-    async function loadComponent(id, file) {
-      try {
-        const r = await fetch(file);
-        if (r.ok) document.getElementById(id).innerHTML = await r.text();
-      } catch (e) {}
-    }
-    loadComponent('header-placeholder', 'header.html');
-    loadComponent('footer-placeholder', 'footer.html');
 
-    function openAddMemberModal() {
-      document.getElementById('addMemberModal').classList.remove('hidden');
-    }
 
-    function closeAddMemberModal() {
-      document.getElementById('addMemberModal').classList.add('hidden');
-    }
 
-    function confirmRemove(name) {
-      document.getElementById('removeName').textContent = `Remove ${name} from this colocation?`;
-      document.getElementById('removeModal').classList.remove('hidden');
-    }
 
-    function closeRemoveModal() {
-      document.getElementById('removeModal').classList.add('hidden');
-    }
 
-    // Tab switching
-    document.querySelectorAll('.coloc-tab').forEach(tab => {
-      tab.addEventListener('click', function() {
-        document.querySelectorAll('.coloc-tab').forEach(t => {
-          t.style.background = '#E5DDD4';
-          t.style.color = '#57534e';
+
+
+
+
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+
+    document.querySelectorAll('[data-toggle]').forEach(btn => {
+      const targetAttr = btn.getAttribute('data-toggle');
+      btn.addEventListener('click', () => {
+        document.querySelectorAll(`[data-section="${targetAttr}"]`).forEach(section => {
+          section.classList.toggle('hidden');
         });
-        this.style.background = '#563F1B';
-        this.style.color = 'white';
       });
     });
-  </script>
-  @endsection
+
+    document.querySelectorAll('.close-section').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const parentSection = btn.closest('.toggle-section');
+        if (parentSection) parentSection.classList.add('hidden');
+      });
+    });
+
+  });
+</script>
+
+@endsection

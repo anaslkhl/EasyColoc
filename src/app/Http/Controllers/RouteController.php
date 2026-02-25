@@ -28,10 +28,7 @@ class RouteController extends Controller
         return view('expences');
     }
 
-    public function colocations()
-    {
-        return view('colocations');
-    }
+   
 
     public function balances()
     {
