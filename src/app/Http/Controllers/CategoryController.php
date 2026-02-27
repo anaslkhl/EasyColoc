@@ -3,14 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Colocation;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
     //
 
+    public function create()
+    {
+        return view('category');
+    }
 
-    public function store(Request $request, $colocation)
+
+    public function store(Request $request,Colocation $colocation)
     {
         $request->validate([
             'name' => 'string|max:256',

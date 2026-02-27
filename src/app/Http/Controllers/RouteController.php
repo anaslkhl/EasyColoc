@@ -29,6 +29,6 @@ class RouteController extends Controller
 
     public function balances()
     {
-        return view('balances');
+        return view('settlements');
     }
 }

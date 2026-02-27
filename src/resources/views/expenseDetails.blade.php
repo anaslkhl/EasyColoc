@@ -103,20 +103,14 @@
             {{-- Footer Actions --}}
             <div class="p-5 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white/[0.02]">
 
-                <a href="{{ route('expenses.index') }}"
+                <a href="{{ route('expenses.show') }}"
                     class="text-xs text-white/40 hover:text-white transition">
                     ← Back to Expenses
                 </a>
 
                 <div class="flex items-center gap-3">
 
-                    {{-- Edit --}}
-                    <a href="{{ route('expenses.edit', $expense->id) }}"
-                        class="px-5 py-2 rounded-xl text-xs font-semibold
-                              bg-[#C9A84C] text-black
-                              hover:brightness-110 active:scale-95 transition">
-                        Edit Expense
-                    </a>
+                    
 
                     {{-- Delete --}}
                     <form action="{{ route('expenses.destroy', $expense->id) }}" method="POST">

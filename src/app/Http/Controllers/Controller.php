@@ -6,8 +6,5 @@ abstract class Controller
 {
     //
 
-    public function hello()
-    {
-        return "hello";
-    }
+
 }

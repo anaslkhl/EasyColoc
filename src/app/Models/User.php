@@ -40,11 +40,15 @@ class User extends Authenticatable
     public function expenses()
     {
         return $this->hasMany(Expense::class, 'payer_id');
-    } 
-    
+    }
+
     public function ownedColocation()
     {
         return $this->hasMany(Colocation::class, 'owner_id');
+    }
+    public function activeExpense()
+    {
+        return $this->hasOne(Expense::class)->where('status', 'active');
     }
 
     /**

@@ -57,7 +57,7 @@ class InvitationController extends Controller
 
         $invitation->update(['status' => 'accepted']);
 
-        return redirect()->route('colocations.show')->with('success', 'You joined the colocation 🎉');
+        return redirect()->route('colocations.index')->with('success', 'You joined the colocation 🎉');
     }
 
     public function decline($token)

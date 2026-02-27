@@ -7,6 +7,7 @@ use App\Models\Colocation;
 use App\Models\Expense;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ExpencesController extends Controller
 {
@@ -47,5 +48,25 @@ class ExpencesController extends Controller
         ]);
 
         return back()->with('success', 'Expense added Successfully');
+    }
+
+
+    public function myExpenses()
+    {
+        $user = Auth::user();
+        $expenses = Expense::with(['colocation.users'])
+            ->whereHas('colocation.users', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->get();
+    }
+
+    public function details($id)
+    {
+        $expense = Expense::with(['user', 'category', 'colocation'])->findOrFail($id);
+
+        return view('expenseDetails', [
+            'expense' => $expense
+        ]);
     }
 }

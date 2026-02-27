@@ -32,7 +32,7 @@ Route::get('/login', [LoginController::class, 'login'])->name('login');
 Route::get('/colocation/create', [ColocationController::class, 'create'])->name('colocations.create');
 Route::post('/colocation/save', [ColocationController::class, 'save'])->name('colocations.save');
 // Route::post('/colocation/store', [ColocationController::class, 'store'])->name('colocations.store');
-Route::get('/colocation/show', [ColocationController::class, 'show'])->name('colocations.show');
+Route::get('/colocation/show', [ColocationController::class, 'show'])->name('colocations.index');
 Route::get('cancel/{colocation}', [ColocationController::class, 'cancel'])->name('cancel');
 Route::get('/create/category', [CategoryController::class, 'create'])->name('create.category');
 Route::post('/create/exponse', [CategoryController::class, 'create'])->name('create.exponse');
@@ -46,11 +46,13 @@ Route::get('/invitations/decline/{token}', [InvitationController::class, 'declin
 Route::get('/leave/{id}', [ColocationController::class, 'leave'])->name('leave.colocation');
 
 Route::get('/expences', [ExpencesController::class, 'expences'])->name('expenses.show');
+Route::get('/expences/details/{id}', [ExpencesController::class, 'details'])->name('expenses.details');
+
 Route::post('/expenses/store', [ExpencesController::class, 'store'])->name('expenses.store');
 
 Route::get('/expences/destroy', [ExpencesController::class, 'destroy'])->name('expenses.destroy');
 
+Route::post('/categories/store/{colocation}', [CategoryController::class, 'store'])->name('categories.store');
 
-Route::middleware(['auth', 'owner'])->group(function () {
-    Route::post('/categories/store/{colocation}', [CategoryController::class, 'store'])->name('categories.store');
-});
+// Route::middleware(['auth', 'owner'])->group(function () {
+// });

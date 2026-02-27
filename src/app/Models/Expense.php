@@ -34,4 +34,21 @@ class Expense extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getSharedExpense()
+    {
+        $memberCount = $this->colocation->user->count();
+        if ($memberCount === 0) {
+            return 0;
+        }
+
+        return $this->amount / $memberCount;
+    }
+
+    public function settlement()
+    {
+        return $this->hasMany(Settlement::class);
+    }
+    
 }
+

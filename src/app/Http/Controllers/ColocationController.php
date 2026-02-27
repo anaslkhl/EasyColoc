@@ -16,7 +16,7 @@ class ColocationController extends Controller
 
     public function index()
     {
-        $userId = Auth::id() ?? 14;
+        $userId = Auth::id();
 
         $colocation = Colocation::with([
             'users',
