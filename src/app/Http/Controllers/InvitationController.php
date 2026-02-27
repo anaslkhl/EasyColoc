@@ -7,10 +7,17 @@ use App\Models\Colocation;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Mail\ColocationInvitation;
+use App\Models\Invitation;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class InvitationController extends Controller
 {
+    public function invite(Colocation $colocation)
+    {
+        return view('colocationsInvite', compact('colocation'));
+    }
+
     public function send(Request $request, Colocation $colocation)
     {
         $request->validate([
@@ -19,25 +26,49 @@ class InvitationController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
+
+        $invitation = $colocation->invitations()->create([
+            'email' => $user->email,
+            'token' => Str::uuid(),
+            'status' => 'pending',
+            'expires_at' => now()->addDays(1),
+        ]);
+
         Mail::to($user->email)->send(
-            new ColocationInvitation($colocation, Auth::user())
+            new ColocationInvitation($colocation, Auth::user(), $invitation)
         );
 
         return back()->with('success', 'Invitation sent 🚀');
     }
 
-    public function accept(Colocation $colocation)
+    public function accept($token)
     {
-        $colocation->users()->attach(Auth::id(), [
+        $invitation = Invitation::where('token', $token)
+            ->where('status', 'pending')
+            ->where('expires_at', '>', now())
+            ->firstOrFail();
+
+        $user = User::where('email', $invitation->email)->firstOrFail();
+
+        $invitation->colocation->users()->attach($user->id, [
             'role' => 'member',
             'joined_at' => now()
         ]);
 
-        return redirect()->route('colocations')->with('success', 'Joined colocation 🎉');
+        $invitation->update(['status' => 'accepted']);
+
+        return redirect()->route('colocations.show')->with('success', 'You joined the colocation 🎉');
     }
 
-    public function decline(Colocation $colocation)
+    public function decline($token)
     {
+        $invitation = Invitation::where('token', $token)
+            ->where('status', 'pending')
+            ->where('expires_at', '>', now())
+            ->firstOrFail();
+
+        $invitation->update(['status' => 'refused']);
+
         return redirect()->route('home')->with('info', 'Invitation declined');
     }
 }

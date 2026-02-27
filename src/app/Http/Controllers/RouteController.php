@@ -23,10 +23,7 @@ class RouteController extends Controller
     {
         return view('home');
     }
-    public function expences()
-    {
-        return view('expences');
-    }
+    
 
    
 

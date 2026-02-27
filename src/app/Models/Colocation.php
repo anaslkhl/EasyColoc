@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Membership;
+use App\Models\Invitation;
+
 
 class Colocation extends Model
 {
@@ -56,6 +58,6 @@ class Colocation extends Model
 
     public function invitations()
     {
-        return $this->hasMany(Invitaion::class);
+        return $this->hasMany(Invitation::class);
     }
 }

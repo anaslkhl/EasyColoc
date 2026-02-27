@@ -15,7 +15,9 @@
         <p class="text-stone-500 mt-1 text-sm">Track and manage all shared expenses.</p>
       </div>
       <button onclick="openExpenseModal()" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium text-white shadow-sm hover:opacity-90 active:scale-95 transition-all" style="background: #DD2D4A;">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
         Add Expense
       </button>
     </div>
@@ -51,210 +53,268 @@
     </div>
 
     <!-- Expenses Table -->
-    <div class="rounded-2xl shadow-sm border border-stone-200 overflow-hidden" style="background: white;">
-      <div class="overflow-x-auto">
-        <table class="w-full" id="expensesTable">
-          <thead>
-            <tr style="background: #FAFAF9; border-bottom: 1px solid #f0ede8;">
-              <th class="sortable text-left px-6 py-4 text-xs font-semibold text-stone-400 uppercase tracking-wider" onclick="sortTable(0)">Title ↕</th>
-              <th class="sortable text-left px-6 py-4 text-xs font-semibold text-stone-400 uppercase tracking-wider" onclick="sortTable(1)">Amount ↕</th>
-              <th class="sortable text-left px-6 py-4 text-xs font-semibold text-stone-400 uppercase tracking-wider" onclick="sortTable(2)">Date ↕</th>
-              <th class="text-left px-6 py-4 text-xs font-semibold text-stone-400 uppercase tracking-wider">Category</th>
-              <th class="text-left px-6 py-4 text-xs font-semibold text-stone-400 uppercase tracking-wider">Payer</th>
-              <th class="text-left px-6 py-4 text-xs font-semibold text-stone-400 uppercase tracking-wider">Status</th>
-              <th class="px-6 py-4"></th>
-            </tr>
-          </thead>
-          <tbody id="expensesBody" class="divide-y divide-stone-50">
-            <!-- Unpaid Row -->
-            <tr class="exp-row unpaid">
-              <td class="px-6 py-4 text-sm font-medium text-stone-800">Monthly Rent</td>
-              <td class="px-6 py-4 text-sm font-semibold text-stone-700">€900.00</td>
-              <td class="px-6 py-4 text-sm text-stone-500">01 Oct 2025</td>
-              <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium" style="background: rgba(198,159,137,0.25); color: #8B6B56;">Rent</span></td>
-              <td class="px-6 py-4">
-                <div class="flex items-center gap-2">
-                  <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold" style="background:#E1BB80; color:#563F1B;">AL</div>
-                  <span class="text-sm text-stone-600">Alice L.</span>
-                </div>
-              </td>
-              <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium" style="background: rgba(221,45,74,0.1); color: #DD2D4A;">Unpaid</span></td>
-              <td class="px-6 py-4"><button class="text-xs text-stone-400 hover:text-stone-700 transition-colors">Edit</button></td>
-            </tr>
-            <tr class="exp-row">
-              <td class="px-6 py-4 text-sm font-medium text-stone-800">Electricity Bill</td>
-              <td class="px-6 py-4 text-sm font-semibold text-stone-700">€85.40</td>
-              <td class="px-6 py-4 text-sm text-stone-500">03 Oct 2025</td>
-              <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium" style="background: rgba(221,45,74,0.1); color: #DD2D4A;">Utilities</span></td>
-              <td class="px-6 py-4">
-                <div class="flex items-center gap-2">
-                  <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold" style="background:#CEABB1; color:#563F1B;">MB</div>
-                  <span class="text-sm text-stone-600">Marc B.</span>
-                </div>
-              </td>
-              <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium" style="background: rgba(68,255,210,0.15); color: #0d9488;">Paid</span></td>
-              <td class="px-6 py-4"><button class="text-xs text-stone-400 hover:text-stone-700 transition-colors">Edit</button></td>
-            </tr>
-            <tr class="exp-row">
-              <td class="px-6 py-4 text-sm font-medium text-stone-800">Weekly Groceries</td>
-              <td class="px-6 py-4 text-sm font-semibold text-stone-700">€156.80</td>
-              <td class="px-6 py-4 text-sm text-stone-500">05 Oct 2025</td>
-              <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium" style="background: rgba(68,255,210,0.15); color: #0d9488;">Groceries</span></td>
-              <td class="px-6 py-4">
-                <div class="flex items-center gap-2">
-                  <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold" style="background:#C5E0D8; color:#0d9488;">SL</div>
-                  <span class="text-sm text-stone-600">Sophie L.</span>
-                </div>
-              </td>
-              <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium" style="background: rgba(68,255,210,0.15); color: #0d9488;">Paid</span></td>
-              <td class="px-6 py-4"><button class="text-xs text-stone-400 hover:text-stone-700 transition-colors">Edit</button></td>
-            </tr>
-            <tr class="exp-row unpaid">
-              <td class="px-6 py-4 text-sm font-medium text-stone-800">Internet Subscription</td>
-              <td class="px-6 py-4 text-sm font-semibold text-stone-700">€45.00</td>
-              <td class="px-6 py-4 text-sm text-stone-500">08 Oct 2025</td>
-              <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium" style="background: rgba(148,119,139,0.15); color: #94778B;">Internet</span></td>
-              <td class="px-6 py-4">
-                <div class="flex items-center gap-2">
-                  <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold" style="background:#DCE2AA; color:#3d4a0a;">NK</div>
-                  <span class="text-sm text-stone-600">Nina K.</span>
-                </div>
-              </td>
-              <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium" style="background: rgba(221,45,74,0.1); color: #DD2D4A;">Unpaid</span></td>
-              <td class="px-6 py-4"><button class="text-xs text-stone-400 hover:text-stone-700 transition-colors">Edit</button></td>
-            </tr>
-            <tr class="exp-row">
-              <td class="px-6 py-4 text-sm font-medium text-stone-800">Cleaning Service</td>
-              <td class="px-6 py-4 text-sm font-semibold text-stone-700">€250.00</td>
-              <td class="px-6 py-4 text-sm text-stone-500">10 Oct 2025</td>
-              <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium" style="background: rgba(220,226,170,0.4); color: #3d4a0a;">Cleaning</span></td>
-              <td class="px-6 py-4">
-                <div class="flex items-center gap-2">
-                  <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold" style="background:#E1BB80; color:#563F1B;">AL</div>
-                  <span class="text-sm text-stone-600">Alice L.</span>
-                </div>
-              </td>
-              <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium" style="background: rgba(68,255,210,0.15); color: #0d9488;">Paid</span></td>
-              <td class="px-6 py-4"><button class="text-xs text-stone-400 hover:text-stone-700 transition-colors">Edit</button></td>
-            </tr>
-            <tr class="exp-row">
-              <td class="px-6 py-4 text-sm font-medium text-stone-800">Gas Bill</td>
-              <td class="px-6 py-4 text-sm font-semibold text-stone-700">€62.30</td>
-              <td class="px-6 py-4 text-sm text-stone-500">12 Oct 2025</td>
-              <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium" style="background: rgba(221,45,74,0.1); color: #DD2D4A;">Utilities</span></td>
-              <td class="px-6 py-4">
-                <div class="flex items-center gap-2">
-                  <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold" style="background:#CEABB1; color:#563F1B;">MB</div>
-                  <span class="text-sm text-stone-600">Marc B.</span>
-                </div>
-              </td>
-              <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium" style="background: rgba(68,255,210,0.15); color: #0d9488;">Paid</span></td>
-              <td class="px-6 py-4"><button class="text-xs text-stone-400 hover:text-stone-700 transition-colors">Edit</button></td>
-            </tr>
-            <tr class="exp-row unpaid">
-              <td class="px-6 py-4 text-sm font-medium text-stone-800">Water Bill</td>
-              <td class="px-6 py-4 text-sm font-semibold text-stone-700">€38.50</td>
-              <td class="px-6 py-4 text-sm text-stone-500">15 Oct 2025</td>
-              <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium" style="background: rgba(221,45,74,0.1); color: #DD2D4A;">Utilities</span></td>
-              <td class="px-6 py-4">
-                <div class="flex items-center gap-2">
-                  <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold" style="background:#C0C0C0; color:#374151;">JD</div>
-                  <span class="text-sm text-stone-600">Jean D.</span>
-                </div>
-              </td>
-              <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium" style="background: rgba(221,45,74,0.1); color: #DD2D4A;">Unpaid</span></td>
-              <td class="px-6 py-4"><button class="text-xs text-stone-400 hover:text-stone-700 transition-colors">Edit</button></td>
-            </tr>
-          </tbody>
-        </table>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      @forelse($expenses as $expense)
+
+      <div class="group flex flex-col justify-between rounded-2xl border border-white/10 
+            bg-[#111318] hover:-translate-y-1.5 hover:shadow-2xl 
+            hover:shadow-black/40 transition-all duration-300 h-[320px]">
+
+        {{-- ───────── HEADER ───────── --}}
+        <div>
+          <div class="flex justify-between items-start p-5">
+            <div class="min-w-0">
+              <p class="text-[10px] uppercase tracking-widest text-white/30">
+                Expense
+              </p>
+              <h3 class="text-sm font-semibold text-[#F0EDE8] truncate">
+                {{ $expense->title }}
+              </h3>
+            </div>
+
+            <div class="text-right shrink-0">
+              <p class="text-[10px] uppercase tracking-widest text-white/30">
+                Amount
+              </p>
+              <p class="text-xl font-bold text-[#C9A84C]">
+                €{{ number_format($expense->amount, 2) }}
+              </p>
+            </div>
+          </div>
+
+          <div class="h-px bg-white/5"></div>
+
+          {{-- ───────── INFO ───────── --}}
+          <div class="grid grid-cols-2 gap-4 p-5 text-xs">
+
+            <div class="space-y-1">
+              <p class="text-white/30 uppercase tracking-wider">Date</p>
+              <p class="text-white/70">
+                {{ \Carbon\Carbon::parse($expense->expense_date)->format('d M Y') }}
+              </p>
+            </div>
+
+            <div class="space-y-1">
+              <p class="text-white/30 uppercase tracking-wider">Category</p>
+              <span class="inline-block px-2.5 py-1 rounded-full 
+                             bg-[#C9A84C]/10 text-[#C9A84C] 
+                             text-[10px] font-semibold">
+                {{ $expense->category->name ?? '—' }}
+              </span>
+            </div>
+
+            <div class="space-y-1">
+              <p class="text-white/30 uppercase tracking-wider">Payer</p>
+              <p class="text-white/70 truncate">
+                {{ optional($expense->user)->name ?? '—' }}
+              </p>
+            </div>
+
+            <div class="space-y-1">
+              <p class="text-white/30 uppercase tracking-wider">Colocation</p>
+              <p class="text-white/70 truncate">
+                {{ optional($expense->colocation)->name ?? '—' }}
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        {{-- ───────── FOOTER ───────── --}}
+        <div class="border-t border-white/5 p-4 flex items-center justify-between">
+
+          {{-- Status --}}
+          @if($expense->is_paid)
+          <span class="px-3 py-1 rounded-full 
+                     bg-green-500/10 text-green-400 
+                     text-[10px] font-bold">
+            ● Paid
+          </span>
+          @else
+          <span class="px-3 py-1 rounded-full 
+                     bg-orange-500/10 text-orange-400 
+                     text-[10px] font-bold animate-pulse">
+            ● Unpaid
+          </span>
+          @endif
+
+          {{-- Buttons --}}
+          <div class="flex items-center gap-2">
+
+            {{-- View Button --}}
+            <a href="{{ route('expenses.show', $expense->id) }}"
+              class="px-4 py-2 text-[11px] font-semibold rounded-lg
+                  bg-[#C9A84C] text-black
+                  hover:brightness-110 active:scale-95
+                  transition">
+              View
+            </a>
+
+            {{-- Delete Button --}}
+            <form action="{{ route('expenses.destroy', $expense->id) }}" method="POST">
+              @csrf
+              @method('DELETE')
+
+              <button type="submit"
+                class="px-4 py-2 text-[11px] font-semibold rounded-lg
+                       bg-red-500/10 text-red-400 border border-red-500/20
+                       hover:bg-red-500/20 hover:text-red-300
+                       active:scale-95 transition">
+                Delete
+              </button>
+            </form>
+
+          </div>
+        </div>
+
       </div>
-      <!-- Table Footer -->
-      <div class="px-6 py-4 border-t border-stone-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3" style="background: #FAFAF9;">
-        <p class="text-sm text-stone-500">Showing <span class="font-medium text-stone-700">7</span> expenses · <span style="color: #DD2D4A;" class="font-medium">3 unpaid</span></p>
-        <p class="text-sm font-semibold text-stone-700">Total: €1,538.00</p>
+
+      @empty
+
+      <div class="col-span-full flex flex-col items-center py-20 text-white/30">
+        <p class="uppercase tracking-widest text-xs">No expenses found</p>
       </div>
+
+      @endforelse
     </div>
+
   </main>
 
   <div id="footer-placeholder"></div>
 
   <!-- Add Expense Modal -->
   <div id="expenseModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+
     <div class="modal-backdrop absolute inset-0 bg-black/50" onclick="closeExpenseModal()"></div>
+
     <div class="modal-box relative bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 max-h-screen overflow-y-auto">
+
       <div class="flex items-center justify-between mb-6">
         <h3 class="font-serif text-2xl text-stone-800">New Expense</h3>
-        <button onclick="closeExpenseModal()" class="w-8 h-8 rounded-lg flex items-center justify-center text-stone-400 hover:bg-stone-100 hover:text-stone-700 transition-all">✕</button>
+        <button onclick="closeExpenseModal()"
+          class="w-8 h-8 rounded-lg flex items-center justify-center text-stone-400 hover:bg-stone-100 hover:text-stone-700 transition-all">
+          ✕
+        </button>
       </div>
-      <div class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium text-stone-700 mb-1.5">Expense Title</label>
-          <input type="text" placeholder="e.g. Monthly groceries" class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm text-stone-700 focus:outline-none transition-all" onfocus="this.style.borderColor='#C69F89'" onblur="this.style.borderColor='#e7e5e4'"/>
-        </div>
-        <div class="grid grid-cols-2 gap-4">
+
+      <form method="POST" action="{{ route('expenses.store') }}">
+        @csrf
+
+        <div class="space-y-4">
+
+          <!-- Title -->
           <div>
-            <label class="block text-sm font-medium text-stone-700 mb-1.5">Amount (€)</label>
-            <input type="number" placeholder="0.00" step="0.01" class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm text-stone-700 focus:outline-none transition-all" onfocus="this.style.borderColor='#C69F89'" onblur="this.style.borderColor='#e7e5e4'"/>
+            <label class="block text-sm font-medium text-stone-700 mb-1.5">Expense Title</label>
+            <input type="text" name="name" required
+              placeholder="e.g. Monthly groceries"
+              class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm text-stone-700 focus:outline-none focus:border-[#C69F89]" />
           </div>
+
+          <!-- Amount + Date -->
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-stone-700 mb-1.5">Amount (€)</label>
+              <input type="number" name="amount" step="0.01" required
+                placeholder="0.00"
+                class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm text-stone-700 focus:outline-none focus:border-[#C69F89]" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-stone-700 mb-1.5">Date</label>
+              <input type="date" name="expense_date" required
+                class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm text-stone-700 focus:outline-none focus:border-[#C69F89]" />
+            </div>
+          </div>
+
+          <!-- Category -->
           <div>
-            <label class="block text-sm font-medium text-stone-700 mb-1.5">Date</label>
-            <input type="date" class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm text-stone-700 focus:outline-none transition-all" onfocus="this.style.borderColor='#C69F89'" onblur="this.style.borderColor='#e7e5e4'"/>
+            <label class="block text-sm font-medium text-stone-700 mb-1.5">Category</label>
+            <select name="category_id" required
+              class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm text-stone-700 focus:outline-none focus:border-[#C69F89]">
+
+              <option value="">Select a category…</option>
+
+              @foreach($categories as $category)
+              <option value="{{ $category->id }}">
+                {{ $category->name }}
+              </option>
+              @endforeach
+            </select>
           </div>
+
+          <!-- Payer -->
+          <div>
+            <label class="block text-sm font-medium text-stone-700 mb-1.5">Payer</label>
+            <select name="user_id" required
+              class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm text-stone-700 focus:outline-none focus:border-[#C69F89]">
+
+              <option value="">Select payer…</option>
+
+              @foreach($users as $user)
+              <option value="{{ $user->id }}">
+                {{ $user->name }}
+              </option>
+              @endforeach
+            </select>
+          </div>
+
+          <!-- Colocation -->
+          <div>
+            <label class="block text-sm font-medium text-stone-700 mb-1.5">Colocation</label>
+            <select name="colocation_id" required
+              class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm text-stone-700 focus:outline-none focus:border-[#C69F89]">
+
+              <option value="">Select colocation…</option>
+              @foreach($colocations as $colocation)
+              <option value="{{ $colocation->id }}">
+                {{ $colocation->name }}
+              </option>
+              @endforeach
+            </select>
+          </div>
+
+          <!-- Notes -->
         </div>
-        <div>
-          <label class="block text-sm font-medium text-stone-700 mb-1.5">Category</label>
-          <select class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm text-stone-700 focus:outline-none transition-all" onfocus="this.style.borderColor='#C69F89'" onblur="this.style.borderColor='#e7e5e4'">
-            <option value="">Select a category…</option>
-            <option>Rent</option>
-            <option>Utilities</option>
-            <option>Groceries</option>
-            <option>Internet</option>
-            <option>Cleaning</option>
-            <option>Transport</option>
-            <option>Other</option>
-          </select>
+
+        <!-- Buttons -->
+        <div class="flex gap-3 mt-6">
+          <button type="button" onclick="closeExpenseModal()"
+            class="flex-1 px-4 py-2.5 rounded-xl border border-stone-200 text-sm font-medium text-stone-600 hover:bg-stone-50 transition-all">
+            Cancel
+          </button>
+
+          <button type="submit"
+            class="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-white transition-all hover:opacity-90 active:scale-95"
+            style="background: #DD2D4A;">
+            Save Expense
+          </button>
         </div>
-        <div>
-          <label class="block text-sm font-medium text-stone-700 mb-1.5">Payer</label>
-          <select class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm text-stone-700 focus:outline-none transition-all" onfocus="this.style.borderColor='#C69F89'" onblur="this.style.borderColor='#e7e5e4'">
-            <option>Alice Laurent</option>
-            <option>Marc Beaumont</option>
-            <option>Sophie Leclerc</option>
-            <option>Nina Kaufmann</option>
-            <option>Jean Dubois</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-stone-700 mb-1.5">Colocation</label>
-          <select class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm text-stone-700 focus:outline-none transition-all" onfocus="this.style.borderColor='#C69F89'" onblur="this.style.borderColor='#e7e5e4'">
-            <option>Rue de la Paix</option>
-            <option>Les Lilas Coloc</option>
-            <option>Montmartre House</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-stone-700 mb-1.5">Notes (optional)</label>
-          <textarea rows="2" placeholder="Any additional details…" class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm text-stone-700 focus:outline-none transition-all resize-none" onfocus="this.style.borderColor='#C69F89'" onblur="this.style.borderColor='#e7e5e4'"></textarea>
-        </div>
-      </div>
-      <div class="flex gap-3 mt-6">
-        <button onclick="closeExpenseModal()" class="flex-1 px-4 py-2.5 rounded-xl border border-stone-200 text-sm font-medium text-stone-600 hover:bg-stone-50 transition-all">Cancel</button>
-        <button onclick="closeExpenseModal()" class="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-white transition-all hover:opacity-90 active:scale-95" style="background: #DD2D4A;">Save Expense</button>
-      </div>
+
+      </form>
     </div>
   </div>
 
   <script>
     async function loadComponent(id, file) {
-      try { const r = await fetch(file); if(r.ok) document.getElementById(id).innerHTML = await r.text(); } catch(e) {}
+      try {
+        const r = await fetch(file);
+        if (r.ok) document.getElementById(id).innerHTML = await r.text();
+      } catch (e) {}
     }
     loadComponent('header-placeholder', 'header.html');
     loadComponent('footer-placeholder', 'footer.html');
 
-    function openExpenseModal() { document.getElementById('expenseModal').classList.remove('hidden'); }
-    function closeExpenseModal() { document.getElementById('expenseModal').classList.add('hidden'); }
+    function openExpenseModal() {
+      document.getElementById('expenseModal').classList.remove('hidden');
+    }
+
+    function closeExpenseModal() {
+      document.getElementById('expenseModal').classList.add('hidden');
+    }
 
     let sortDir = {};
+
     function sortTable(col) {
       const tbody = document.getElementById('expensesBody');
       const rows = Array.from(tbody.querySelectorAll('tr'));

@@ -26,7 +26,7 @@ class User extends Authenticatable
 
     public function memberships()
     {
-        return $this->hasMany(Memberships::class);
+        return $this->hasMany(Membership::class);
     }
 
     public function colocations()
@@ -37,6 +37,11 @@ class User extends Authenticatable
     }
 
 
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class, 'payer_id');
+    } 
+    
     public function ownedColocation()
     {
         return $this->hasMany(Colocation::class, 'owner_id');

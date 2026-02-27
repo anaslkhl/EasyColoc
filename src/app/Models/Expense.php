@@ -8,11 +8,13 @@ class Expense extends Model
 {
     //
 
+    protected $with = ['user'];
+
 
     protected $fillable = [
         'colocation_id',
         'category_id',
-        'payer_id',
+        'user_id',
         'title',
         'amount',
         'expense_date',
@@ -28,8 +30,8 @@ class Expense extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function payer()
+    public function user()
     {
-        return $this->belongsTo(User::class, 'payer_id');
+        return $this->belongsTo(User::class);
     }
 }
