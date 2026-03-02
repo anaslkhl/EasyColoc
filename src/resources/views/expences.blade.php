@@ -50,6 +50,7 @@
   </div>
 
   <!-- EXPENSE CARDS -->
+
   <div class="max-w-7xl mx-auto w-full px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
     @forelse($expenses as $expense)
@@ -198,6 +199,15 @@
         </button>
       </div>
     </form>
+    @if($errors->any())
+    <div class="text-red-500 mb-2">
+      <ul>
+        @foreach($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+      </ul>
+    </div>
+    @endif
   </div>
 </div>
 

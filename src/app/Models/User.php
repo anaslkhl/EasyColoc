@@ -6,6 +6,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Settlement;
+
 
 class User extends Authenticatable
 {
@@ -49,6 +51,16 @@ class User extends Authenticatable
     public function activeExpense()
     {
         return $this->hasOne(Expense::class)->where('status', 'active');
+    }
+
+    public function settlementsAsDebtor()
+    {
+        return $this->hasMany(Settlement::class, 'from_user');
+    }
+
+    public function settlementsAsCreditor()
+    {
+        return $this->hasMany(Settlement::class, 'to_user');
     }
 
     /**

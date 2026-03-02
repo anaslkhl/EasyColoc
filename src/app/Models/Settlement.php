@@ -10,8 +10,8 @@ class Settlement extends Model
 
     protected $fillable = [
         'colocation_id',
-        'debtor_id',
-        'creditor_id',
+        'from_user',
+        'to_user',
         'amount',
         'status',
         'paid_at'
@@ -24,11 +24,11 @@ class Settlement extends Model
 
     public function debtor()
     {
-        return $this->belongsTo(User::class, 'debtor_id');
+        return $this->belongsTo(User::class, 'from_user');
     }
 
     public function creditor()
     {
-        return $this->belongsTo(User::class, 'creditor_id');
+        return $this->belongsTo(User::class, 'to_user');
     }
 }

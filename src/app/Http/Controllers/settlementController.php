@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Expense;
-
 use App\Models\Membership;
-use App\Models\Settlement;
 use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Settlement;
 use Illuminate\Support\Facades\Auth;
+
 
 class settlementController extends Controller
 {
@@ -15,23 +16,28 @@ class settlementController extends Controller
 
 
 
-
-    private function createSettlements($expense)
+    public function index()
     {
-        $members = $expense->members;
-        $share = $expense->amount / $members->count();
+        $user = Auth::user();
 
-        foreach ($members as $member) {
-            if ($member->id == $expense->owner_id) continue;
+        $owes = $user->settlementsAsDebtor()->where('status', 'pending')->get();
+        $owedTo = $user->settlementsAsCreditor()->where('status', 'pending')->get();
 
-            Settlement::create([
-                'colocation_id' => $expense->colocation_id,
-                'debtor_id' => $member->id,
-                'creditor_id' => $expense->owner_id,
-                'amount' => $share,
-                'status' => 'Pending',
-            ]);
-        }
+        $totalOwes = $owes->sum('amount');
+        $totalOwed = $owedTo->sum('amount');
+
+        $summary = [
+            'you_are_owed' => $totalOwed,
+            'you_owe' => $totalOwes,
+            'net' => $totalOwed - $totalOwes,
+        ];
+
+        $settlements = $owes->merge($owedTo);
+
+        return view('settlements', compact(
+            'summary',
+            'settlements'
+        ));
     }
 
 

@@ -15,8 +15,11 @@
                 </div>
                 <a href="{{ url('home') }}" class="font-serif text-xl text-white tracking-wide hover:text-amber-200 transition-colors">EasyColoc</a>
             </div>
-
+            <div class="flex items-center gap-3">
+                <a href="{{ url('home') }}" class="font-serif text-xl text-white tracking-wide hover:text-amber-200 transition-colors">Home</a>
+            </div>
             <!-- Desktop Nav -->
+            @auth
             <nav class="hidden md:flex items-center gap-2">
                 <!-- Dashboard -->
                 <a href="{{ url('dashboard') }}"
@@ -29,31 +32,32 @@
                 <!-- Colocations -->
                 <a href="{{ url('colocations') }}"
                     class="px-4 py-2 rounded-lg text-sm font-medium text-stone-300 
-              hover:text-white hover:bg-stone-700 transition-all duration-300">
+                hover:text-white hover:bg-stone-700 transition-all duration-300">
                     Colocations
                 </a>
 
                 <!-- Expenses -->
                 <a href="{{ url('expences') }}"
                     class="px-4 py-2 rounded-lg text-sm font-medium text-stone-300 
-              hover:text-white hover:bg-stone-700 transition-all duration-300">
+                hover:text-white hover:bg-stone-700 transition-all duration-300">
                     Expenses
                 </a>
 
                 <!-- Balances -->
-                <a href="{{ url('balances') }}"
+                <a href="{{ url('settlements') }}"
                     class="px-4 py-2 rounded-lg text-sm font-medium text-stone-300 
               hover:text-white hover:bg-stone-700 transition-all duration-300">
-                    Balances
+                    Settlements
                 </a>
 
                 <!-- Admin -->
                 <a href="{{ url('admin') }}"
                     class="px-4 py-2 rounded-lg text-sm font-medium text-[#DD2D4A] 
-              hover:bg-[#DD2D4A]/20 hover:text-[#DD2D4A] transition-all duration-300">
+                    hover:bg-[#DD2D4A]/20 hover:text-[#DD2D4A] transition-all duration-300">
                     Admin
                 </a>
             </nav>
+            @endauth
 
             <!-- User Profile Dropdown -->
             @auth
