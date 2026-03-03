@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Colocation;
+use App\Models\Membership;
+use App\Models\Settlement;
 use App\Models\User;
-use Illuminate\Container\Attributes\Auth as AttributesAuth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -76,5 +77,22 @@ class ColocationController extends Controller
         $colocation->save();
 
         return redirect()->route('colocation.index')->with('success', 'La colocation a été annulée avec succès.');
+    }
+
+    public function exit()
+    {
+        $user = Auth::user();
+        $hasUnpaidDebts = Settlement::where('from_user', $user->id)
+            ->where('status', 'pending')
+            ->exists();
+
+        if ($hasUnpaidDebts) {
+            $user->reputation = -1;
+            $user->save();
+        }
+        Membership::where('user_id', $user->id)->delete();
+
+        return redirect('/dashboard')
+            ->with('success', 'You have exited the colocation.');
     }
 }

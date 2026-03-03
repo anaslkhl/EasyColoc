@@ -38,7 +38,7 @@
         View Settlements
       </a>
     </div>
-
+    
     <!-- Members Table -->
     <div class="mt-6 bg-[#1E1E2A] rounded-2xl p-6">
       <h2 class="text-2xl font-semibold text-[#D4AF37] mb-4">Members</h2>
@@ -65,7 +65,14 @@
         </table>
       </div>
     </div>
-
+    
+    <form action="{{ route('colocation.exit') }}" method="POST"
+      onsubmit="return confirm('Are you sure you want to exit this colocation?')">
+      @csrf
+      <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg">
+        Exit Colocation
+      </button>
+    </form>
     <!-- Categories -->
     <div class="mt-6 bg-[#1E1E2A] rounded-2xl p-6">
       <h2 class="text-2xl font-semibold text-[#D4AF37] mb-4">Categories</h2>
@@ -82,7 +89,8 @@
     </div>
 
   </div>
-
+  
+  
   <!-- CATEGORY FORM MODAL -->
   <div id="categoryForm" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
     <div class="bg-[#111318] p-8 rounded-2xl w-96 shadow-xl relative">

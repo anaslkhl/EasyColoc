@@ -10,10 +10,6 @@ class RouteController extends Controller
 {
     //
 
-    public function dashboard()
-    {
-        return view('dashboard');
-    }
 
     public function home()
     {

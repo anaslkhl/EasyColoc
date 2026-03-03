@@ -8,6 +8,7 @@ use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RouteController;
 use App\Http\Controllers\SettlementController;
+use App\Http\Controllers\UserController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\MemberMiddleware;
 use App\Http\Middleware\OwnerMiddleware;
@@ -38,7 +39,7 @@ Route::middleware([AdminMiddleware::class])->group(function () {
 });
 
 Route::middleware([MemberMiddleware::class])->group(function () {
-    Route::get('/dashboard', [RouteController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
     Route::get('/colocations', [ColocationController::class, 'index'])->name('colocation.index');
     Route::get('/expences', [ExpencesController::class, 'index'])->name('expenses.index');
     Route::get('/expences/details/{id}', [ExpencesController::class, 'details'])->name('expenses.details');
@@ -51,8 +52,7 @@ Route::middleware([MemberMiddleware::class])->group(function () {
 });
 
 
-Route::middleware([OwnerMiddleware::class])->group(function () {
-});
+Route::middleware([OwnerMiddleware::class])->group(function () {});
 
 Route::post('/expenses/store', [ExpencesController::class, 'store'])->name('expenses.store');
 Route::get('/colocation/create', [ColocationController::class, 'create'])->name('colocations.create');
@@ -68,3 +68,5 @@ Route::post('/invite/send/{colocation}', [InvitationController::class, 'send'])-
 Route::get('/expences/destroy', [ExpencesController::class, 'destroy'])->name('expenses.destroy');
 
 Route::get('/colocations', [ColocationController::class, 'index'])->name('colocations.index');
+
+Route::post('/colocation/exit',[ColocationController::class, 'exit'])->name('colocation.exit');
