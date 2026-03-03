@@ -19,16 +19,22 @@ class ExpencesController extends Controller
     {
         $user = Auth::user();
 
-        return view('expences', [
-            'expenses' => Expense::with(['user', 'category', 'colocation'])
-                ->where('user_id', $user->id) // only the logged-in user's expenses
-                ->get(),
-            'categories' => Category::all(),
-            'users' => User::all(), // if needed for form selection
-            'colocations' => Colocation::all() // if needed for form selection
-        ]);
-    }
+        $colocationIds = $user->memberships()->pluck('colocation_id');
 
+        $expenses = Expense::whereIn('colocation_id', $colocationIds)
+            ->with(['category', 'user', 'colocation'])
+            ->get();
+
+        $colocations = Colocation::whereIn('id', $colocationIds)->get();
+
+        $users = User::whereHas('memberships', function ($q) use ($colocationIds) {
+            $q->whereIn('colocation_id', $colocationIds);
+        })->get();
+
+        $categories = Category::whereIn('colocation_id', $colocationIds)->get();
+
+        return view('expences', compact('expenses', 'colocations', 'users', 'categories'));
+    }
 
 
     public function store(Request $request)

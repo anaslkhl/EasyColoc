@@ -22,8 +22,10 @@ class ColocationController extends Controller
             'users',
             'activeMembers',
             'categories'
-        ])->where('owner_id', $userId)->first();
-
+        ])->whereHas('users', function ($query) use ($userId) {
+            $query->where('users.id', $userId);
+        })
+            ->first();
         $isOwner = (bool) $colocation;
 
         return view('colocations', compact(
@@ -60,5 +62,19 @@ class ColocationController extends Controller
         ]);
 
         return redirect('/colocations')->with('Succes', 'Colocation added Successfully');
+    }
+
+    public function cancel(Colocation $colocation)
+    {
+        $user = Auth::user();
+
+        if ($colocation->owner_id !== $user->id) {
+            abort(403, 'Seul le propriétaire peut annuler cette colocation.');
+        }
+
+        $colocation->status = 'cancelled';
+        $colocation->save();
+
+        return redirect()->route('colocation.index')->with('success', 'La colocation a été annulée avec succès.');
     }
 }

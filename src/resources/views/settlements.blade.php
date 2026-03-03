@@ -12,92 +12,101 @@
         </div>
 
         @if(Auth::user()->colocations->count() === 0)
-            <!-- No Colocation Message -->
-            <div class="bg-[#111318] p-8 rounded-3xl border border-[#1F2937] text-center">
-                <p class="text-gray-400 mb-4">You don’t have any colocations yet.</p>
-                <a href="{{ route('colocations.create') }}"
-                   class="inline-block px-6 py-3 rounded-xl bg-[#DD2D4A] hover:opacity-90 transition font-semibold text-sm text-white">
-                    Create Your First Colocation
-                </a>
-            </div>
+        <!-- No Colocation Message -->
+        <div class="bg-[#111318] p-8 rounded-3xl border border-[#1F2937] text-center">
+            <p class="text-gray-400 mb-4">You don’t have any colocations yet.</p>
+            <a href="{{ route('colocations.create') }}"
+                class="inline-block px-6 py-3 rounded-xl bg-[#DD2D4A] hover:opacity-90 transition font-semibold text-sm text-white">
+                Create Your First Colocation
+            </a>
+        </div>
         @else
-            <!-- User has Colocation(s) -->
-            @foreach(Auth::user()->colocations as $colocation)
-            <div class="bg-[#111318] border border-[#1F2937] rounded-3xl p-8 mb-8">
+        <!-- User has Colocation(s) -->
+        @foreach(Auth::user()->colocations as $colocation)
+        <div class="bg-[#111318] border border-[#1F2937] rounded-3xl p-8 mb-8">
 
-                <!-- Colocation Header -->
-                <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
-                    <div>
-                        <h2 class="text-2xl font-bold text-[#D4AF37]">{{ $colocation->name }}</h2>
-                        <p class="text-gray-400 mt-1">{{ $colocation->description ?? 'No description' }}</p>
-                    </div>
-                    <span class="px-4 py-1 rounded-full text-sm font-semibold {{ $colocation->status === 'active' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400' }}">
-                        {{ ucfirst($colocation->status) }}
-                    </span>
+            <!-- Colocation Header -->
+            <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-[#D4AF37]">{{ $colocation->name }}</h2>
+                    <p class="text-gray-400 mt-1">{{ $colocation->description ?? 'No description' }}</p>
                 </div>
-
-                <!-- Summary Cards -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                    <div class="p-5 rounded-2xl border border-gray-700 bg-[#0F172A] shadow">
-                        <p class="text-sm text-gray-400 mb-2">You're Owed</p>
-                        <p class="text-2xl font-semibold text-teal-400">€{{ number_format($summary['you_are_owed'] ?? 0,2) }}</p>
-                    </div>
-                    <div class="p-5 rounded-2xl border border-gray-700 bg-[#0F172A] shadow">
-                        <p class="text-sm text-gray-400 mb-2">You Owe</p>
-                        <p class="text-2xl font-semibold text-red-500">€{{ number_format($summary['you_owe'] ?? 0,2) }}</p>
-                    </div>
-                    <div class="p-5 rounded-2xl border border-gray-700 bg-[#0F172A] shadow">
-                        <p class="text-sm text-gray-400 mb-2">Net</p>
-                        <p class="text-2xl font-semibold {{ ($summary['net'] ?? 0)>=0 ? 'text-teal-400':'text-red-500' }}">
-                            €{{ number_format(abs($summary['net'] ?? 0),2) }}
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Settlements Table -->
-                @if($settlements->count() > 0)
-                <div class="overflow-x-auto rounded-2xl border border-gray-700 bg-[#0F172A]">
-                    <table class="w-full text-sm">
-                        <thead class="bg-gray-700">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-gray-400 uppercase tracking-wider">From</th>
-                                <th class="px-6 py-3 text-left text-gray-400 uppercase tracking-wider">To</th>
-                                <th class="px-6 py-3 text-left text-gray-400 uppercase tracking-wider">Amount</th>
-                                <th class="px-6 py-3 text-left text-gray-400 uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-3"></th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-700">
-                            @foreach($settlements as $settlement)
-                            <tr class="hover:bg-gray-700 transition-colors">
-                                <td class="px-6 py-3">{{ $settlement->debtor->name }}</td>
-                                <td class="px-6 py-3">{{ $settlement->creditor->name }}</td>
-                                <td class="px-6 py-3 text-red-400 font-semibold">€{{ number_format($settlement->amount,2) }}</td>
-                                <td class="px-6 py-3">
-                                    <span class="px-2 py-1 rounded-full text-xs font-medium {{ $settlement->status=='Pending' ? 'bg-red-900 text-red-400':'bg-teal-900 text-teal-400' }}">
-                                        {{ $settlement->status=='pending' ? 'Pending' : 'Paid' }}
-                                    </span>
-                                </td>
-                                <td class="px-6 py-3">
-                                    @if($settlement->status=='pending')
-                                        <button onclick="markPaid({{ $settlement->id }}, this)" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-900 bg-teal-400 hover:opacity-90 transition-all">
-                                            Mark Paid
-                                        </button>
-                                    @else
-                                        <span class="text-xs text-gray-500">Settled</span>
-                                    @endif
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                @else
-                <p class="text-gray-400 mt-4 text-center">No settlements yet for this colocation.</p>
-                @endif
-
+                <span class="px-4 py-1 rounded-full text-sm font-semibold {{ $colocation->status === 'active' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400' }}">
+                    {{ ucfirst($colocation->status) }}
+                </span>
             </div>
-            @endforeach
+
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                <div class="p-5 rounded-2xl border border-gray-700 bg-[#0F172A] shadow">
+                    <p class="text-sm text-gray-400 mb-2">You're Owed</p>
+                    <p class="text-2xl font-semibold text-teal-400">€{{ number_format($summary['you_are_owed'] ?? 0,2) }}</p>
+                </div>
+                <div class="p-5 rounded-2xl border border-gray-700 bg-[#0F172A] shadow">
+                    <p class="text-sm text-gray-400 mb-2">You Owe</p>
+                    <p class="text-2xl font-semibold text-red-500">€{{ number_format($summary['you_owe'] ?? 0,2) }}</p>
+                </div>
+                <div class="p-5 rounded-2xl border border-gray-700 bg-[#0F172A] shadow">
+                    <p class="text-sm text-gray-400 mb-2">Net</p>
+                    <p class="text-2xl font-semibold {{ ($summary['net'] ?? 0)>=0 ? 'text-teal-400':'text-red-500' }}">
+                        €{{ number_format(abs($summary['net'] ?? 0),2) }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Settlements Table -->
+            @if($settlements->count() > 0)
+            <div class="overflow-x-auto rounded-2xl border border-gray-700 bg-[#0F172A]">
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-700">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-gray-400 uppercase tracking-wider">From</th>
+                            <th class="px-6 py-3 text-left text-gray-400 uppercase tracking-wider">To</th>
+                            <th class="px-6 py-3 text-left text-gray-400 uppercase tracking-wider">Amount</th>
+                            <th class="px-6 py-3 text-left text-gray-400 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-700">
+                        @foreach($settlements as $settlement)
+                        <tr class="bg-gray-900">
+                            <td class="px-4 py-2">{{ $settlement->fromUser?->name ?? 'Unknown' }}</td>
+                            <td class="px-4 py-2">{{ $settlement->toUser?->name ?? 'Unknown' }}</td>
+                            <td class="px-4 py-2">{{ $settlement->amount }}</td>
+                            <td class="px-4 py-2 capitalize">
+                                @if($settlement->status == 'pending')
+                                Pending
+                                @else
+                                Settled
+                                @endif
+                            </td>
+                            <td class="px-4 py-2">
+                                @if($settlement->status == 'pending' && Auth::id() === $settlement->from_user)
+                                <form action="{{ route('settlements.markPaid', $settlement->id) }}" method="POST" class="inline">
+                                    @csrf
+                                    <button type="submit"
+                                        class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-900 bg-teal-400 hover:opacity-90 transition-all">
+                                        Mark Paid
+                                    </button>
+                                </form>
+                                @elseif($settlement->status == 'pending')
+                                <span class="text-xs text-gray-500">Pending</span>
+                                @else
+                                <span class="text-xs text-gray-500">Settled</span>
+                                @endif
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+
+                </table>
+            </div>
+            @else
+            <p class="text-gray-400 mt-4 text-center">No settlements yet for this colocation.</p>
+            @endif
+
+        </div>
+        @endforeach
         @endif
     </main>
 
@@ -123,4 +132,4 @@
             });
         }
     </script>
-@endsection
+    @endsection

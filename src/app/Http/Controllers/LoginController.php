@@ -62,6 +62,9 @@ class LoginController extends Controller
 
 
                 alert('Succés!', 'Bienvenue!');
+                if (FacadesAuth::user()->role === 'admin') {
+                    return redirect()->route('admin');
+                }
                 return redirect('/home');
             } else {
                 return redirect()->back()->with('Failed to connect');

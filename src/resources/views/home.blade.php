@@ -15,7 +15,7 @@
         </div>
 
         <!-- Hero Title -->
-        <h1 class="text-5xl font-bold text-white mb-4">Welcome, Anas 👋</h1>
+        <h1 class="text-5xl font-bold text-white mb-4">Welcome, 👋</h1>
 
         <!-- Description -->
         <p class="text-lg sm:text-xl text-gray-200 max-w-2xl mb-8">
@@ -32,10 +32,6 @@
             </a>
         </div>
 
-        <!-- Optional Illustration -->
-        <div class="mt-12 w-full max-w-4xl">
-            <img src="{{ asset('images/landing-illustration.png') }}" alt="Illustration" class="w-full h-auto rounded-lg shadow-lg">
-        </div>
     </div>
 
 </main>

@@ -51,19 +51,24 @@ class settlementController extends Controller
         return view('settlements.index', compact('settlements'));
     }
 
+
     public function markPaid($id)
     {
-        $settlement = Settlement::findOrFail($id);
+        $settlement = \App\Models\Settlement::findOrFail($id);
+        $user = Auth::user();
 
-        if (Auth::id() !== $settlement->from_user) {
-            abort(403, 'Unauthorized');
+        if ($settlement->to_user != $user->id && $settlement->from_user != $user->id) {
+            abort(403, 'Vous ne pouvez pas marquer ce règlement comme payé.');
         }
 
-        $settlement->update([
-            'status' => 'paid',
-            'paid_at' => now(),
-        ]);
+        if ($settlement->status == 'paid') {
+            return redirect()->back()->with('error', 'Ce règlement est déjà payé.');
+        }
 
-        return back()->with('success', 'Payment marked as paid.');
+        $settlement->status = 'paid';
+        $settlement->paid_at = now();
+        $settlement->save();
+
+        return redirect()->back()->with('success', 'Règlement marqué comme payé.');
     }
 }

@@ -51,11 +51,14 @@
                 </a>
 
                 <!-- Admin -->
+                @if(Auth::check() && Auth::user()->role === 'admin')
+
                 <a href="{{ url('admin') }}"
                     class="px-4 py-2 rounded-lg text-sm font-medium text-[#DD2D4A] 
                     hover:bg-[#DD2D4A]/20 hover:text-[#DD2D4A] transition-all duration-300">
                     Admin
                 </a>
+                @endif
             </nav>
             @endauth
 

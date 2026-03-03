@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class EnsureUserIsMember
+class OwnerMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
@@ -16,9 +16,8 @@ class EnsureUserIsMember
         }
 
         $colocation = $request->route('colocation');
-
-        if (!$colocation || !$colocation->users->contains(Auth::id())) {
-            abort(403, 'Access denied (Members only)');
+        if (!$colocation || $colocation->owner_id !== Auth::id()) {
+            abort(403, 'Access denied (Owner only)');
         }
 
         return $next($request);

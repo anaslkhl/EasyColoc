@@ -15,17 +15,12 @@ class RouteController extends Controller
         return view('dashboard');
     }
 
-    public function admin()
-    {
-        return view('admin');
-    }
     public function home()
     {
         return view('home');
     }
     
 
-   
 
     public function balances()
     {

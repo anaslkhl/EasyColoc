@@ -35,6 +35,11 @@ class Expense extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     public function getSharedExpense()
     {
         $memberCount = $this->colocation->user->count();
@@ -49,6 +54,4 @@ class Expense extends Model
     {
         return $this->hasMany(Settlement::class);
     }
-    
 }
-
