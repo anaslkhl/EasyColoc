@@ -44,10 +44,21 @@ class ColocationController extends Controller
 
     public function save(Request $request)
     {
+        $user = Auth::user();
         $request->validate([
             'name' => 'required|string|max:256',
             'description' => 'nullable|string|max:512'
         ]);
+
+
+        $hasActive = Colocation::where('owner_id', $user->id)
+            ->where('status', 'active')
+            ->exists();
+
+        if ($hasActive) {
+            return back()->with('error', 'You already have an active colocation.');
+        }
+
 
 
         $colocation = Colocation::create([
@@ -73,7 +84,7 @@ class ColocationController extends Controller
             abort(403, 'Seul le propriétaire peut annuler cette colocation.');
         }
 
-        $colocation->status = 'cancelled';
+        $colocation->status = 'canceled';
         $colocation->save();
 
         return redirect()->route('colocation.index')->with('success', 'La colocation a été annulée avec succès.');

@@ -40,7 +40,7 @@ Route::middleware([AdminMiddleware::class])->group(function () {
 
 Route::middleware([MemberMiddleware::class])->group(function () {
     Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
-    Route::get('/colocations', [ColocationController::class, 'index'])->name('colocation.index');
+    Route::get('/colocations/index', [ColocationController::class, 'index'])->name('colocation.index');
     Route::get('/expences', [ExpencesController::class, 'index'])->name('expenses.index');
     Route::get('/expences/details/{id}', [ExpencesController::class, 'details'])->name('expenses.details');
     Route::get('/settlements', [SettlementController::class, 'index'])->name('settlements.index');
